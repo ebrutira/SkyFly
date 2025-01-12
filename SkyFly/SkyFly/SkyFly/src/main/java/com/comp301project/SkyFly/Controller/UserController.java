@@ -1,5 +1,6 @@
 package com.comp301project.SkyFly.Controller;
 
+import com.comp301project.SkyFly.DTO.UserDTO;
 import com.comp301project.SkyFly.Service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,5 +1,6 @@
 package com.comp301project.SkyFly.Service;
 
+import com.comp301project.SkyFly.DTO.UserDTO;
 import java.util.List;
 
 public interface UserService {

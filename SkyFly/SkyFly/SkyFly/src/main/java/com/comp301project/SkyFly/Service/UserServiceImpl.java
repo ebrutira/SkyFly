@@ -1,5 +1,6 @@
 package com.comp301project.SkyFly.Service;
 
+import com.comp301project.SkyFly.DTO.UserDTO;
 import com.comp301project.SkyFly.Exception.UserNotFoundException;
 import com.comp301project.SkyFly.Model.User;
 import com.comp301project.SkyFly.Repository.UserRepository;
