@@ -61,4 +61,11 @@ public class FlightServiceImpl implements FlightService {
         }
         flightRepository.deleteById(id);
     }
+
+    @Override
+    public List<Flight> searchFlightsByParams(String origin, String destination, String arrivalTime) {
+        return flightRepository.findFlightsByParams(origin, destination, arrivalTime);
+    }
+
+
 }

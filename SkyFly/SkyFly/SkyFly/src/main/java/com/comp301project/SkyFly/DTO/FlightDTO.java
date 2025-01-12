@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class FlightDTO {
     private String flightNumber;
+    private String companyName;
     private String origin;
     private String destination;
     private String departureTime;
@@ -18,6 +19,12 @@ public class FlightDTO {
     public void setFlightNumber(String flightNumber) {
         this.flightNumber = flightNumber;
 }
+
+    public String getCompanyName() { return companyName; }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
 
     public String getOrigin() {
     return origin;
