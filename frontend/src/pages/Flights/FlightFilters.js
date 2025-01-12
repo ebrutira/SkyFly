@@ -10,7 +10,7 @@ import {
     Divider
 } from '@mui/material';
 
-const FlightFilters = ({ filters, onChange }) => {
+const FlightFilters = ({ filters, onChange, airlines = [] }) => {
     const handlePriceChange = (event, newValue) => {
         onChange({
             ...filters,
@@ -36,6 +36,9 @@ const FlightFilters = ({ filters, onChange }) => {
         });
     };
 
+    const formatPrice = (price) => `${price.toLocaleString()} ₺`;
+    const formatTime = (hour) => `${hour}:00`;
+
     return (
         <Paper
             sx={{
@@ -55,7 +58,6 @@ const FlightFilters = ({ filters, onChange }) => {
                 Filtreler
             </Typography>
 
-            {/* Fiyat Aralığı */}
             <Box sx={{ mb: 3 }}>
                 <Typography
                     variant="subtitle2"
@@ -64,15 +66,16 @@ const FlightFilters = ({ filters, onChange }) => {
                         mb: 1
                     }}
                 >
-                    Fiyat Aralığı (₺)
+                    Fiyat Aralığı
                 </Typography>
                 <Slider
                     value={filters.priceRange}
                     onChange={handlePriceChange}
                     valueLabelDisplay="auto"
                     min={0}
-                    max={5000}
+                    max={Math.max(...filters.priceRange)}
                     step={100}
+                    valueLabelFormat={formatPrice}
                     sx={{
                         color: '#7392B7',
                         '& .MuiSlider-thumb': {
@@ -84,17 +87,16 @@ const FlightFilters = ({ filters, onChange }) => {
                 />
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography variant="body2" color="text.secondary">
-                        ₺{filters.priceRange[0]}
+                        {formatPrice(filters.priceRange[0])}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        ₺{filters.priceRange[1]}
+                        {formatPrice(filters.priceRange[1])}
                     </Typography>
                 </Box>
             </Box>
 
             <Divider sx={{ my: 2 }} />
 
-            {/* Kalkış Saati Aralığı */}
             <Box sx={{ mb: 3 }}>
                 <Typography
                     variant="subtitle2"
@@ -103,7 +105,7 @@ const FlightFilters = ({ filters, onChange }) => {
                         mb: 1
                     }}
                 >
-                    Kalkış Saati (24 saat)
+                    Kalkış Saati
                 </Typography>
                 <Slider
                     value={filters.timeRange}
@@ -111,21 +113,21 @@ const FlightFilters = ({ filters, onChange }) => {
                     valueLabelDisplay="auto"
                     min={0}
                     max={24}
+                    valueLabelFormat={formatTime}
                     sx={{ color: '#7392B7' }}
                 />
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography variant="body2" color="text.secondary">
-                        {filters.timeRange[0]}:00
+                        {formatTime(filters.timeRange[0])}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        {filters.timeRange[1]}:00
+                        {formatTime(filters.timeRange[1])}
                     </Typography>
                 </Box>
             </Box>
 
             <Divider sx={{ my: 2 }} />
 
-            {/* Havayolları */}
             <Box>
                 <Typography
                     variant="subtitle2"
@@ -137,7 +139,7 @@ const FlightFilters = ({ filters, onChange }) => {
                     Havayolları
                 </Typography>
                 <FormGroup>
-                    {['THY', 'Pegasus', 'AnadoluJet', 'SunExpress'].map((airline) => (
+                    {airlines.map((airline) => (
                         <FormControlLabel
                             key={airline}
                             control={

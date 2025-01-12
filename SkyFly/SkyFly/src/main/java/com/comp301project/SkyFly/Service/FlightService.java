@@ -1,12 +1,21 @@
 package com.comp301project.SkyFly.Service;
 
-import com.comp301project.SkyFly.DTO.FlightDTO;
+import com.comp301project.SkyFly.Model.Flight;
 import java.util.List;
 
 public interface FlightService {
-    List<FlightDTO> getAllFlights();
-    FlightDTO getFlightById(Long id);
-    FlightDTO createFlight(FlightDTO flightDTO);
-    FlightDTO updateFlight(Long id, FlightDTO flightDTO);
+    List<Flight> getAllFlights();
+    Flight getFlightById(Long id);
+    Flight createFlight(Flight flight);
+    Flight updateFlight(Long id, Flight flight);
     void deleteFlight(Long id);
+    List<Flight> searchFlights(
+            String origin,
+            String destination,
+            String departureDate,
+            String companyName,
+            Double minPrice,
+            Double maxPrice
+    );
+    List<String> getAllCities();
 }

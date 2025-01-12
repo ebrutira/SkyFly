@@ -8,6 +8,7 @@ import About from './pages/About';
 import Profile from './pages/Profile';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
+import BookingPage from './pages/Booking/BookingPage';
 
 // Geçici 404 sayfası
 const NotFound = () => (
@@ -31,6 +32,14 @@ const AppRoutes = () => {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route
+                path="/booking"
+                element={
+                    <PrivateRoute>
+                        <BookingPage />
+                    </PrivateRoute>
+                }
+            />
+            <Route
                 path="/profile"
                 element={
                     <PrivateRoute>
@@ -40,7 +49,7 @@ const AppRoutes = () => {
             />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="*" element={<div>404 - Sayfa Bulunamadı</div>} />
+            <Route path="*" element={<NotFound />} />
         </Routes>
     );
 };
