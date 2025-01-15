@@ -1,13 +1,21 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
-    Card, CardContent, Typography, Box,
-    Divider, Button, Chip
+    Card,
+    CardContent,
+    Typography,
+    Box,
+    Divider,
+    Button,
+    Chip
 } from '@mui/material';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import FlightLandIcon from '@mui/icons-material/FlightLand';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 const FlightCard = ({ flight, onSelect }) => {
+    const navigate = useNavigate();
+
     const formatDateTime = (dateTimeStr) => {
         const date = new Date(dateTimeStr);
         return new Intl.DateTimeFormat('tr-TR', {
@@ -17,6 +25,10 @@ const FlightCard = ({ flight, onSelect }) => {
             month: '2-digit',
             year: 'numeric'
         }).format(date);
+    };
+
+    const handleBooking = () => {
+        navigate('/booking', { state: { flight } });
     };
 
     const formatPrice = (price) => {
@@ -112,7 +124,7 @@ const FlightCard = ({ flight, onSelect }) => {
                 <Box sx={{ textAlign: 'right' }}>
                     <Button
                         variant="contained"
-                        onClick={() => onSelect(flight)}
+                        onClick={handleBooking}
                         sx={{
                             bgcolor: '#7392B7',
                             '&:hover': {
