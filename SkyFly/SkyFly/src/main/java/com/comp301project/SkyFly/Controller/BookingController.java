@@ -46,4 +46,8 @@ public class BookingController {
         bookingService.cancelBooking(id);
         return ResponseEntity.noContent().build();
     }
+    @PutMapping("/{id}/confirm")
+    public ResponseEntity<BookingDTO> confirmBooking(@PathVariable Long id) {
+        return ResponseEntity.ok(bookingService.updateBookingStatus(id, "CONFIRMED"));
+    }
 }

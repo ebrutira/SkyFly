@@ -9,6 +9,7 @@ import Profile from './pages/Profile';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import Booking from './pages/Booking/Booking';
+import Payment from './pages/Payment/Payment';
 // Geçici 404 sayfası
 const NotFound = () => (
     <div style={{
@@ -43,6 +44,14 @@ const AppRoutes = () => {
                 element={
                     <PrivateRoute>
                         <Profile />
+                    </PrivateRoute>
+                }
+            />
+            <Route
+                path="/payment"
+                element={
+                    <PrivateRoute>
+                        <Payment />
                     </PrivateRoute>
                 }
             />
