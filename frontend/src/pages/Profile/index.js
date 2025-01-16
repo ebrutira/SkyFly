@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import {
     Container,
     Box,
@@ -7,7 +8,9 @@ import {
     Tabs,
     Tab,
     Avatar,
-    Grid
+    Grid,
+    Alert,
+    Snackbar
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import FlightIcon from '@mui/icons-material/Flight';
@@ -17,9 +20,15 @@ import ProfileInfo from './ProfileInfo';
 import PastFlights from './PastFlights';
 import PaymentMethods from './PaymentMethods';
 import Settings from './Settings';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Profile = () => {
+    const location = useLocation();
+    const { user } = useAuth();
     const [activeTab, setActiveTab] = useState(0);
+    const [showSuccessMessage, setShowSuccessMessage] = useState(
+        location.state?.paymentSuccess || false
+    );
 
     const handleTabChange = (event, newValue) => {
         setActiveTab(newValue);
@@ -48,6 +57,22 @@ const Profile = () => {
             py: 6
         }}>
             <Container>
+                {/* Success Message Snackbar */}
+                <Snackbar
+                    open={showSuccessMessage}
+                    autoHideDuration={6000}
+                    onClose={() => setShowSuccessMessage(false)}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                >
+                    <Alert
+                        onClose={() => setShowSuccessMessage(false)}
+                        severity="success"
+                        sx={{ width: '100%' }}
+                    >
+                        {location.state?.message || 'İşlem başarıyla tamamlandı!'}
+                    </Alert>
+                </Snackbar>
+
                 {/* Profil Başlığı */}
                 <Paper sx={{
                     p: 4,
@@ -69,10 +94,10 @@ const Profile = () => {
                         </Grid>
                         <Grid item>
                             <Typography variant="h4" sx={{ color: '#7392B7', fontWeight: 'bold' }}>
-                                Hoşgeldin, Kullanıcı
+                                Hoşgeldin, {user?.firstName || 'Kullanıcı'}
                             </Typography>
                             <Typography color="text.secondary">
-                                user@example.com
+                                {user?.email}
                             </Typography>
                         </Grid>
                     </Grid>

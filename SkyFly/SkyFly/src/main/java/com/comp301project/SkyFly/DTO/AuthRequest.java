@@ -13,7 +13,7 @@ public class AuthRequest {
     private String email;
     private String password;
 
-    // Getter ve Setterları elle ekleyelim
+    // Lombok kullanımında sorun varsa manuel getter/setter ekleyin
     public String getEmail() {
         return email;
     }

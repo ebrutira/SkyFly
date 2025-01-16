@@ -19,7 +19,6 @@ const PaymentForm = ({ onSubmit }) => {
         cvv: ''
     });
     const [errors, setErrors] = useState({});
-    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -44,24 +43,16 @@ const PaymentForm = ({ onSubmit }) => {
         }
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        setLoading(true);
-
         const validation = validatePaymentForm(cardData);
+
         if (!validation.isValid) {
             setErrors(validation.errors);
-            setLoading(false);
             return;
         }
 
-        try {
-            await onSubmit(cardData);
-        } catch (error) {
-            setErrors({ submit: error.message });
-        } finally {
-            setLoading(false);
-        }
+        onSubmit(cardData);
     };
 
     return (
@@ -82,7 +73,7 @@ const PaymentForm = ({ onSubmit }) => {
                         onChange={handleChange}
                         error={!!errors.cardNumber}
                         helperText={errors.cardNumber}
-                        disabled={loading}
+                        placeholder="1234 5678 9012 3456"
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -102,7 +93,6 @@ const PaymentForm = ({ onSubmit }) => {
                         onChange={handleChange}
                         error={!!errors.expiryDate}
                         helperText={errors.expiryDate}
-                        disabled={loading}
                         placeholder="AA/YY"
                         InputProps={{
                             startAdornment: (
@@ -123,7 +113,7 @@ const PaymentForm = ({ onSubmit }) => {
                         onChange={handleChange}
                         error={!!errors.cvv}
                         helperText={errors.cvv}
-                        disabled={loading}
+                        type="password"
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -139,14 +129,13 @@ const PaymentForm = ({ onSubmit }) => {
                         fullWidth
                         type="submit"
                         variant="contained"
-                        disabled={loading}
                         sx={{
                             mt: 2,
                             bgcolor: '#7392B7',
                             '&:hover': { bgcolor: '#759EB8' }
                         }}
                     >
-                        {loading ? 'İşleniyor...' : 'Ödemeyi Tamamla'}
+                        Devam Et
                     </Button>
                 </Grid>
             </Grid>

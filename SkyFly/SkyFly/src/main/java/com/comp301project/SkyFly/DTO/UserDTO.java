@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDate;
 
 @Data
@@ -19,4 +18,17 @@ public class UserDTO {
     private String phoneNumber;
     private String address;
     private LocalDate birthDate;
+
+    // Manuel getter/setter
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 }

@@ -21,8 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
-
+    private static final Logger log = LoggerFactory.getLogger(AuthService.class);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -31,20 +30,17 @@ public class AuthService {
 
     @Transactional
     public AuthResponse register(RegisterRequest request) {
-        logger.info("Processing registration request for email: {}", request.getEmail());
+        log.info("Processing registration request for email: {}", request.getEmail());
 
-        // E-posta kontrolü
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            logger.error("Email already exists: {}", request.getEmail());
+            log.error("Email already exists: {}", request.getEmail());
             throw new RuntimeException("Bu email adresi zaten kayıtlı");
         }
 
         try {
-            // Şifreyi hashle
             String hashedPassword = passwordEncoder.encode(request.getPassword());
-            logger.debug("Password hashed successfully");
+            log.debug("Password hashed successfully");
 
-            // Yeni kullanıcı oluştur
             User user = User.builder()
                     .firstName(request.getFirstName())
                     .lastName(request.getLastName())
@@ -53,14 +49,10 @@ public class AuthService {
                     .phoneNumber(request.getPhoneNumber())
                     .build();
 
-            // Kullanıcıyı kaydet
             user = userRepository.save(user);
-            logger.info("User saved successfully: {}", user.getEmail());
+            log.info("User saved successfully: {}", user.getEmail());
 
-            // Token oluştur
             String token = jwtService.generateToken(user);
-
-            // Response için UserDTO oluştur
             UserDTO userDTO = modelMapper.map(user, UserDTO.class);
 
             return AuthResponse.builder()
@@ -69,43 +61,31 @@ public class AuthService {
                     .build();
 
         } catch (Exception e) {
-            logger.error("Registration failed for email: " + request.getEmail(), e);
+            log.error("Registration failed for email: " + request.getEmail(), e);
             throw new RuntimeException("Kayıt işlemi başarısız oldu");
         }
     }
 
     @Transactional
     public AuthResponse login(AuthRequest request) {
-        logger.info("Processing login request for email: {}", request.getEmail());
+        log.info("Processing login request for email: {}", request.getEmail());
 
         try {
-            // Kullanıcıyı bul
             User user = userRepository.findByEmail(request.getEmail())
                     .orElseThrow(() -> {
-                        logger.error("User not found with email: {}", request.getEmail());
+                        log.error("User not found with email: {}", request.getEmail());
                         return new RuntimeException("E-posta veya şifre hatalı");
                     });
 
-            // Şifre kontrolü
-            if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-                logger.error("Password mismatch for user: {}", request.getEmail());
-                throw new RuntimeException("E-posta veya şifre hatalı");
-            }
-
-            // Authentication
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            // Token oluştur
             String token = jwtService.generateToken(user);
-
-            // Response için UserDTO oluştur
             UserDTO userDTO = modelMapper.map(user, UserDTO.class);
 
-            logger.info("Login successful for user: {}", request.getEmail());
+            log.info("Login successful for user: {}", request.getEmail());
 
             return AuthResponse.builder()
                     .token(token)
@@ -113,7 +93,7 @@ public class AuthService {
                     .build();
 
         } catch (Exception e) {
-            logger.error("Login failed for user: " + request.getEmail(), e);
+            log.error("Login failed for user: " + request.getEmail(), e);
             throw new RuntimeException("E-posta veya şifre hatalı");
         }
     }
@@ -121,11 +101,11 @@ public class AuthService {
     @Transactional(readOnly = true)
     public UserDTO getCurrentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        logger.debug("Fetching current user details for email: {}", email);
+        log.debug("Fetching current user details for email: {}", email);
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> {
-                    logger.error("User not found with email: {}", email);
+                    log.error("User not found with email: {}", email);
                     return new RuntimeException("Kullanıcı bulunamadı");
                 });
 
@@ -134,6 +114,6 @@ public class AuthService {
 
     public void logout() {
         SecurityContextHolder.clearContext();
-        logger.info("User logged out successfully");
+        log.info("User logged out successfully");
     }
 }

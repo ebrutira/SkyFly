@@ -20,11 +20,28 @@ public class BookingDTO {
     private String bookingNumber;
     private Double totalPrice;
     private String status;
-
-    // Flight detayları (frontend için)
     private String flightNumber;
     private String origin;
     private String destination;
     private String departureTime;
     private String arrivalTime;
+
+    // Manuel getter/setter
+    public Long getId() {
+        return id;
+    }
+
+    public Long getFlightId() {
+        return flightId;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public List<PassengerDTO> getPassengers() {
+        return passengers;
+    }
+
+    // Diğer getter/setter metodları
 }

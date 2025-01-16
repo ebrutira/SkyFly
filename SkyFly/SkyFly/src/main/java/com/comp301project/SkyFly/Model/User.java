@@ -15,6 +15,8 @@ import java.util.ArrayList;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
@@ -43,11 +45,17 @@ public class User implements UserDetails {
     private LocalDate birthDate;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Builder.Default
     private List<Booking> bookings = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("USER"));
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
     }
 
     @Override

@@ -4,12 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "passengers")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "passengers")
 public class Passenger {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

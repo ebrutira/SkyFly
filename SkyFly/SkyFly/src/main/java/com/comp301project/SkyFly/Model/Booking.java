@@ -2,16 +2,19 @@ package com.comp301project.SkyFly.Model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "bookings")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "bookings")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,13 +22,16 @@ public class Booking {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "flight_id", nullable = false)
+    @JsonIgnore
     private Flight flight;
 
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Passenger> passengers = new ArrayList<>();
 
     @Column(nullable = false)
@@ -38,10 +44,5 @@ public class Booking {
     private Double totalPrice;
 
     @Column(nullable = false)
-    private String status; // PENDING, CONFIRMED, CANCELLED
-
-    @PrePersist
-    protected void onCreate() {
-        bookingDate = LocalDateTime.now();
-    }
+    private String status;
 }

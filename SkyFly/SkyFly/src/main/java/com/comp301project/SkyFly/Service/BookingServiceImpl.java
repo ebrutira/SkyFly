@@ -11,7 +11,8 @@ import com.comp301project.SkyFly.Repository.BookingRepository;
 import com.comp301project.SkyFly.Repository.FlightRepository;
 import com.comp301project.SkyFly.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +25,8 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class BookingServiceImpl implements BookingService {
+    private static final Logger log = LoggerFactory.getLogger(BookingServiceImpl.class);
 
     private final BookingRepository bookingRepository;
     private final FlightRepository flightRepository;
@@ -38,14 +39,12 @@ public class BookingServiceImpl implements BookingService {
         log.info("Creating booking for flight ID: {} and user email: {}",
                 bookingDTO.getFlightId(), bookingDTO.getUserEmail());
 
-        // Uçuş ve kullanıcı kontrolü
         Flight flight = flightRepository.findById(bookingDTO.getFlightId())
                 .orElseThrow(() -> new RuntimeException("Uçuş bulunamadı"));
 
         User user = userRepository.findByEmail(bookingDTO.getUserEmail())
                 .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
 
-        // Booking nesnesini oluştur
         final Booking newBooking = Booking.builder()
                 .user(user)
                 .flight(flight)
@@ -56,11 +55,9 @@ public class BookingServiceImpl implements BookingService {
                 .passengers(new ArrayList<>())
                 .build();
 
-        // Booking'i kaydet
         final Booking savedBooking = bookingRepository.save(newBooking);
         log.info("Created booking with number: {}", savedBooking.getBookingNumber());
 
-        // Yolcuları ekle
         if (bookingDTO.getPassengers() != null && !bookingDTO.getPassengers().isEmpty()) {
             List<Passenger> passengers = bookingDTO.getPassengers().stream()
                     .map(passengerDTO -> Passenger.builder()

@@ -8,7 +8,6 @@ import {
     Snackbar
 } from '@mui/material';
 import { useAuth } from '../../contexts/AuthContext';
-import api from '../../services/api';
 
 const ProfileInfo = () => {
     const { user } = useAuth();
@@ -16,7 +15,7 @@ const ProfileInfo = () => {
         firstName: '',
         lastName: '',
         email: '',
-        phone: '',
+        phoneNumber: '',
         address: '',
         birthDate: ''
     });
@@ -33,9 +32,9 @@ const ProfileInfo = () => {
                 firstName: user.firstName || '',
                 lastName: user.lastName || '',
                 email: user.email || '',
-                phone: user.phoneNumber || '',
-                address: '',  // Backend'den gelecek
-                birthDate: '' // Backend'den gelecek
+                phoneNumber: user.phoneNumber || '',
+                address: user.address || '',
+                birthDate: user.birthDate || ''
             });
         }
     }, [user]);
@@ -50,12 +49,24 @@ const ProfileInfo = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await api.put('/api/users/profile', formData);
-            setSnackbar({
-                open: true,
-                message: 'Profil bilgileriniz başarıyla güncellendi!',
-                severity: 'success'
+            const response = await fetch('http://localhost:8080/api/users/profile', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify(formData)
             });
+
+            if (response.ok) {
+                setSnackbar({
+                    open: true,
+                    message: 'Profil bilgileriniz başarıyla güncellendi!',
+                    severity: 'success'
+                });
+            } else {
+                throw new Error('Profil güncellenirken bir hata oluştu');
+            }
         } catch (error) {
             setSnackbar({
                 open: true,
@@ -75,7 +86,6 @@ const ProfileInfo = () => {
                         name="firstName"
                         value={formData.firstName}
                         onChange={handleChange}
-                        required
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -85,7 +95,6 @@ const ProfileInfo = () => {
                         name="lastName"
                         value={formData.lastName}
                         onChange={handleChange}
-                        required
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -96,27 +105,16 @@ const ProfileInfo = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        required
+                        disabled
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
                         fullWidth
                         label="Telefon"
-                        name="phone"
-                        value={formData.phone}
+                        name="phoneNumber"
+                        value={formData.phoneNumber}
                         onChange={handleChange}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        fullWidth
-                        label="Doğum Tarihi"
-                        type="date"
-                        name="birthDate"
-                        value={formData.birthDate}
-                        onChange={handleChange}
-                        InputLabelProps={{ shrink: true }}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -128,6 +126,19 @@ const ProfileInfo = () => {
                         onChange={handleChange}
                         multiline
                         rows={3}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        fullWidth
+                        label="Doğum Tarihi"
+                        name="birthDate"
+                        type="date"
+                        value={formData.birthDate}
+                        onChange={handleChange}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
                     />
                 </Grid>
                 <Grid item xs={12}>

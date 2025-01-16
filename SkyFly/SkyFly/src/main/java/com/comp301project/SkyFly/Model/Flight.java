@@ -2,6 +2,8 @@ package com.comp301project.SkyFly.Model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +12,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "flights")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Flight {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +43,8 @@ public class Flight {
     @Column(nullable = false)
     private Double price;
 
-    @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "flight", fetch = FetchType.LAZY)
+    @JsonIgnore
+    @Builder.Default
     private List<Booking> bookings = new ArrayList<>();
 }
