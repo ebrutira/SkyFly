@@ -302,3 +302,20 @@ npm run build
 4. Push to branch: `git push origin feature/amazing-feature`
 5. Open Pull Request
 
+---
+
+## 👥 Team
+
+- **Ebru Tıraş** - *Full Stack Developer* - [@ebrutira](https://github.com/ebrutira)
+- **Alperen Kurt** - *Full Stack Developer* - [@alperenkurtt](https://github.com/alperenkurtt)
+
+---
+
+<div align="center">
+
+**⭐ Star this repo if you found it helpful!**
+
+Made with ❤️ by [Ebru Tıraş](https://github.com/ebrutira) & [Alperen Kurt](https://github.com/alperenkurtt)
+
+</div>
+
