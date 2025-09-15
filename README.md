@@ -17,13 +17,31 @@
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### 🐳 Docker (Recommended)
+
+```bash
+# Clone repository
+git clone https://github.com/ebrutira/SkyFly.git
+cd SkyFly
+
+# Start all services with Docker Compose
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+```
+
+**Access:** Frontend: http://localhost:3000 | Backend: http://localhost:8080
+
+### 📋 Manual Installation
+
+#### Prerequisites
 - Java 21+
 - Node.js 18+
 - Maven 3.6+
 - SQL Server
 
-### Installation
+#### Installation
 
 ```bash
 # Clone repository
@@ -208,15 +226,67 @@ cd frontend && npm test
 
 ---
 
+## 🐳 Docker Commands
+
+### Development
+```bash
+# Start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+
+# Rebuild and start
+docker-compose up --build -d
+```
+
+### Production
+```bash
+# Build images
+docker-compose -f docker-compose.yml build
+
+# Start production services
+docker-compose -f docker-compose.yml up -d
+
+# Scale services
+docker-compose up --scale backend=3 -d
+```
+
+### Individual Services
+```bash
+# Backend only
+docker-compose up backend database -d
+
+# Frontend only
+docker-compose up frontend -d
+
+# Database only
+docker-compose up database -d
+```
+
 ## 📦 Deployment
 
-### Backend
+### Docker Deployment (Recommended)
+```bash
+# Production deployment
+docker-compose -f docker-compose.yml up -d
+
+# With custom environment
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+```
+
+### Manual Deployment
+
+#### Backend
 ```bash
 mvn clean package -DskipTests
 java -jar target/SkyFly-0.0.1-SNAPSHOT.jar
 ```
 
-### Frontend
+#### Frontend
 ```bash
 npm run build
 # Deploy build/ folder to web server

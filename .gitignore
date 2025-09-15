@@ -132,3 +132,10 @@ pnpm-lock.yaml
 *.dylib
 *.dll
 *.exe
+
+# ===========================================
+# Docker
+# ===========================================
+.dockerignore
+docker-compose.override.yml
+docker-compose.prod.yml

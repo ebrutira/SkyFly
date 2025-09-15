@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  # SQL Server Database
+  database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: skyfly-database
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - skyfly-network
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P YourStrong@Passw0rd -Q 'SELECT 1'"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Backend Service
+  backend:
+    build:
+      context: ./SkyFly/SkyFly
+      dockerfile: Dockerfile
+    container_name: skyfly-backend
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:sqlserver://database:1433;databaseName=skyflydatabase;encrypt=true;trustServerCertificate=true;
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=YourStrong@Passw0rd
+      - SERVER_PORT=8080
+      - JWT_SECRET=404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+    ports:
+      - "8080:8080"
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - skyfly-network
+    restart: unless-stopped
+
+  # Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: skyfly-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - skyfly-network
+    restart: unless-stopped
+
+  # Redis (Optional - for caching)
+  redis:
+    image: redis:7-alpine
+    container_name: skyfly-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - skyfly-network
+    restart: unless-stopped
+
+volumes:
+  sqlserver_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  skyfly-network:
+    driver: bridge
